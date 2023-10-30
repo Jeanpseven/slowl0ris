@@ -131,9 +131,18 @@ def signal_handler(signal, frame):
     sys.exit(0)
 
 if __name__ == '__main__':
-    print("\033[94m")
-    print(r"______ _    _ _   _  _     ___________ _____ _____")
-    print(r"| ___ \ |  | | \ | || |   |  _  | ___ \_   _/  ___|")
-    print(r"| |_/ / |  | |  \| || |   | | | | |_/ / | | \ `--. ")
-    print(r"|  __/| |/\| | . ` || |   | | | |    /  | |  `--. \ ")
-    print(r"| |   \  /\  / |\  || |___\ \_/ / |\ \ _|
+    parser = argparse.ArgumentParser()
+    parser.add_argument('host', metavar='Host', nargs=None, help='host to be tested')
+    parser.add_argument('-t', '--tor', help='enable to attack through TOR', action="store_true")
+    parser.add_argument('-n', dest='threads', type=int, default=8, nargs='?', help='number of threads (default 8)', action="store")
+    parser.add_argument('-k', dest='keepalive', type=int, default=90, nargs='?', help='seconds to keep connection alive (default 90)', action="store")
+    parser.add_argument('-i', dest='interval', type=int, default=5, nargs='?', help='seconds between keep alive check intervals (default 5)', action="store")
+    parser.add_argument('-sh', dest='sockshost', default='127.0.0.1', nargs='?', help='host TOR is running (default 127.0.0.1)', action="store")
+    parser.add_argument('-sp', dest='socksport', type=int, default=9050, nargs='?', help='port TOR is using (default 9050)', action="store")
+    args = parser.parse_args()
+
+    if sys.platform != 'win32':
+        signal.signal(signal.SIGHUP, signal_handler)
+        signal.signal(signal.SIGINT, signal_handler)
+
+    slowloris()
