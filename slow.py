@@ -136,13 +136,4 @@ if __name__ == '__main__':
     print(r"| ___ \ |  | | \ | || |   |  _  | ___ \_   _/  ___|")
     print(r"| |_/ / |  | |  \| || |   | | | | |_/ / | | \ `--. ")
     print(r"|  __/| |/\| | . ` || |   | | | |    /  | |  `--. \ ")
-    print(r"| |   \  /\  / |\  || |___\ \_/ / |\ \ _| |_/\__/ /")
-    print(r"\_|    \/  \/\_| \_/\_____/\___/\_| \_|\___/\____/ ")
-    print(r"Slowloris DOS tool by Jeanpseven (Wrench)")
-    print("\033[0m\n", flush=True)
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('host', metavar='Host', nargs=None, help='host to be tested')
-    parser.add_argument('-t', '--tor', help='enable to attack through TOR', action="store_true")
-    parser.add_argument('-n', dest='threads', type=int, default=8, nargs='?', help='number of threads (default 8)', action="store")
-    parser.add
+    print(r"| |   \  /\  / |\  || |___\ \_/ / |\ \ _|
